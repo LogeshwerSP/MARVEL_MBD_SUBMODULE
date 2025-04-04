@@ -4046,8 +4046,7 @@ void Protection_step(void)
   /* Update for DiscreteIntegrator: '<S1>/Discrete-Time Integrator' incorporates:
    *  Inport: '<Root>/Protection_LoopTime_msec'
    */
-  Protection_DW.DiscreteTimeIntegrator_DSTATE += 0.1 *
-    Protection_U.Protection_LoopTime_msec;
+  Protection_DW.DiscreteTimeIntegrator_DSTATE += Protection_U.Protection_LoopTime_msec;
   Protection_DW.DiscreteTimeIntegrator_PrevRese = (int8_T)rtb_NOT;
 }
 

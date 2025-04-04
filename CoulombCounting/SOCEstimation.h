@@ -50,7 +50,7 @@ typedef struct {
   real32_T ModIntegratedCurrent;       /* '<S10>/Modulus IntegCurrent' */
   real32_T IntegratedCurrent;          /* '<S10>/IntegCurrent' */
   int32_T Effectiveusablecapacity;     /* '<S20>/Data Type Conversion1' */
-  int32_T capLatch;                    /* '<S8>/SOC_Estimator' */
+  // int32_T capLatch;                    /* '<S8>/SOC_Estimator' */
   int32_T TotalCapacityRemains_mAh;    /* '<S8>/SOC_Estimator' */
   int32_T Initial_Capacity_mAh;        /* '<S8>/SOC_Estimator' */
   B_SOC_ReadFromEEPROM_SOCEstim_T sf_SOC_ReadFromEEPROM;/* '<S1>/SOC_ReadFromEEPROM' */
