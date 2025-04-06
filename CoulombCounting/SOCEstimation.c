@@ -30,6 +30,7 @@
 #include "monitorOperations.h"
 extern float SoHFromCycleCountVal;
 extern uint32_t debugLatchCapacity;
+bool calculateSoH2 = false;
 /* Named constants for Chart: '<S8>/SOC_Estimator' */
 #define SOCEsti_IN_Recalibrate_Charging ((uint8_T)4U)
 #define SOCEstimatio_IN_CoulombCounting ((uint8_T)1U)
@@ -755,7 +756,7 @@ void SOCEstimation_step(void)
      *  RelationalOperator: '<S5>/GreaterThan'
      */
     if ((rtb_HigherthresholdwithIcomp >=
-         SOCEstimation_B.sf_SOC_ReadFromEEPROM.SoH) &&
+         (SOCEstimation_B.sf_SOC_ReadFromEEPROM.SoH + 2)) &&
         SOCEstimation_B.sf_SOC_ReadFromEEPROM.PrevLatch) {
       /* Switch: '<S5>/Switch' */
       SOCEstimation_B.Switch = SOCEstimation_B.sf_SOC_ReadFromEEPROM.SoH;
@@ -1227,10 +1228,12 @@ void SOCEstimation_step(void)
               (uint16_T)SOCEstimation_U.CC_Inputs.DebouncingTimeout_msec) {
             /* Transition: '<S13>:78' */
             /* '<S13>:78:2' capLatch = TotalCapacityRemains_mAh; */
-            // SOCEstimation_B.capLatch = SOCEstimation_B.TotalCapacityRemains_mAh;
+            SOCEstimation_B.capLatch = SOCEstimation_B.TotalCapacityRemains_mAh;
             SOCEstimation_DW.temporalCounter_i1 = 0U;
             SOCEstimation_DW.is_c15_SOCEstimation =
               SOCEsti_IN_Recalibrate_Charging;
+
+            calculateSoH2 = true;
 
             /* Entry 'Recalibrate_Charging': '<S13>:6' */
             /* '<S13>:6:3' CC_State = CCState.Recalibrate; */
@@ -1556,9 +1559,9 @@ void SOCEstimation_step(void)
    */
   /* MATLAB Function 'SOCEstimation/MATLAB Function': '<S2>:1' */
   /* '<S2>:1:3' if (calcSoH && prevLatch) */
-  if (rtb_calcSoH && SOCEstimation_B.sf_SOC_ReadFromEEPROM.PrevLatch) {               
+  if (rtb_calcSoH && SOCEstimation_B.sf_SOC_ReadFromEEPROM.PrevLatch && calculateSoH2) {               
     /* '<S2>:1:4' SoH2 = single((single(capLatch) / single(insCap))) * 100; */
-    rtb_SoH2 = (real32_T)SOCEstimation_B.TotalCapacityRemains_mAh / (real32_T)
+    rtb_SoH2 = (real32_T)SOCEstimation_B.capLatch / (real32_T)
     SOCEstimation_U.CC_Inputs.InstalledCapacity_mAh / (real32_T)
     SOCEstimation_B.sf_SOC_ReadFromEEPROM.TcompPersist * 100.0F;
     int8_t delSoH = rtb_SoH2 - SOCEstimation_Y.CC_Outputs.SOH_pct;
@@ -1574,10 +1577,13 @@ void SOCEstimation_step(void)
     else
     {
       SOCEstimation_B.sf_SOC_ReadFromEEPROM.SoH2        = rtb_SoH2;                  //manual changes done for SoH2 sequence
-      rtb_calcSoH                                       = false; 
       SOCEstimation_B.sf_SOC_ReadFromEEPROM.SoHCalcEn   = true;                        
-      SOCEstimation_B.sf_SOC_ReadFromEEPROM.cycleCount  += (SOCEstimation_Y.CC_Outputs.Total_CapacityRemains_mAh / SOCEstimation_U.CC_Inputs.InstalledCapacity_mAh);
     }
+       
+    rtb_calcSoH                                       = false;
+    calculateSoH2                                     = false;   
+    SOCEstimation_B.sf_SOC_ReadFromEEPROM.cycleCount  += (SOCEstimation_Y.CC_Outputs.Total_CapacityRemains_mAh / SOCEstimation_U.CC_Inputs.InstalledCapacity_mAh);
+    
     debugLatchCapacity = SOCEstimation_B.TotalCapacityRemains_mAh;        //Debug purpose
 
     /* '<S2>:1:5' prevSoH2 = SoH2; */
@@ -1702,7 +1708,7 @@ void SOCEstimation_initialize(void)
 
   /* '<S13>:221:10' filteredVoltage = 0; */
   SOCEstimation_DW.filteredVoltage = 0.0;
-  // SOCEstimation_B.capLatch = 0;
+  SOCEstimation_B.capLatch = 0;
   SOCEstimation_B.TotalCapacityRemains_mAh = 0;
   SOCEstimation_B.Initial_Capacity_mAh = 0;
   SOCEstimation_B.SoCEst = 0.0;
