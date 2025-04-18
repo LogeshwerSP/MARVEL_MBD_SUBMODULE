@@ -78,7 +78,7 @@ const CC_OutputsBus ChargingAlgorithm_rtZCC_Outputs = {0,/* Total_CapacityRemain
   false                                /* EKF_resetTimer */
 };
 
-void MultiWordSignedWrap(const uint32_T u1[], int32_T n1, uint32_T n2, uint32_T
+void MultiWordSignedWrap_chg(const uint32_T u1[], int32_T n1, uint32_T n2, uint32_T
   y[])
 {
   int32_T i;
@@ -747,7 +747,7 @@ void ChargingAlgorithm_step(void)
     tmp_1 = (uint32_T)(int32_T)floor((real_T)(tmp_4 - tmp_5) *
       ChargingAlgorithm_B.Constant_K);
     sMultiWordMul_chg(&tmp_0, 1, &tmp_1, 1, &tmp.chunks[0U], 2);
-    MultiWordSignedWrap(&tmp.chunks[0U], 2, 16U, &rtb_Saturation.chunks[0U]);
+    MultiWordSignedWrap_chg(&tmp.chunks[0U], 2, 16U, &rtb_Saturation.chunks[0U]);
 
     /* Saturate: '<S1>/Saturation' */
     if (sMultiWordGt(&rtb_Saturation.chunks[0U],

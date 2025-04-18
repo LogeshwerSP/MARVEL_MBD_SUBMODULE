@@ -76,9 +76,9 @@ extern real_T rt_roundd_snf_dp(real_T u);
 extern boolean_T sMultiWordGe(const uint32_T u1[], const uint32_T u2[], int32_T
   n);
 extern int32_T sMultiWordCmp_dp(const uint32_T u1[], const uint32_T u2[], int32_T n);
-extern void sMultiWordShl(const uint32_T u1[], int32_T n1, uint32_T n2, uint32_T
+extern void sMultiWordShl_dp(const uint32_T u1[], int32_T n1, uint32_T n2, uint32_T
   y[], int32_T n);
-extern void sLong2MultiWord(int32_T u, uint32_T y[], int32_T n);
+extern void sLong2MultiWord_dp(int32_T u, uint32_T y[], int32_T n);
 extern void sMultiWordMul_dp(const uint32_T u1[], int32_T n1, const uint32_T u2[],
   int32_T n2, uint32_T y[], int32_T n);
 extern real32_T sMultiWord2Single_dp(const uint32_T u1[], int32_T n1, int32_T e1);

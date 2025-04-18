@@ -128,7 +128,7 @@ int32_T sMultiWordCmp_dp(const uint32_T u1[], const uint32_T u2[], int32_T n)
   return y;
 }
 
-void sMultiWordShl(const uint32_T u1[], int32_T n1, uint32_T n2, uint32_T y[],
+void sMultiWordShl_dp(const uint32_T u1[], int32_T n1, uint32_T n2, uint32_T y[],
                    int32_T n)
 {
   int32_T i;
@@ -180,7 +180,7 @@ void sMultiWordShl(const uint32_T u1[], int32_T n1, uint32_T n2, uint32_T y[],
   }
 }
 
-void sLong2MultiWord(int32_T u, uint32_T y[], int32_T n)
+void sLong2MultiWord_dp(int32_T u, uint32_T y[], int32_T n)
 {
   int32_T i;
   uint32_T yi;
@@ -584,8 +584,8 @@ void DataPipeline_step(void)
     DataPipeline_Y.DataPipelineb.isChargeEn = 1U;
   } else {
     /* RelationalOperator: '<S1>/GreaterThan1' */
-    sLong2MultiWord(DataPipeline_U.CurrentSense_mA, &tmp_0.chunks[0U], 2);
-    sMultiWordShl(&tmp_0.chunks[0U], 2, 31U, &tmp.chunks[0U], 2);
+    sLong2MultiWord_dp(DataPipeline_U.CurrentSense_mA, &tmp_0.chunks[0U], 2);
+    sMultiWordShl_dp(&tmp_0.chunks[0U], 2, 31U, &tmp.chunks[0U], 2);
 
     /* Gain: '<S1>/Gain' */
     tmp_1 = 1932735283U;

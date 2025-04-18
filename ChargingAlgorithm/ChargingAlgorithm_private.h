@@ -72,7 +72,7 @@ Verification pane for ERT based targets, which will disable the \
 preprocessor word size checks.
 #endif
 
-extern void MultiWordSignedWrap(const uint32_T u1[], int32_T n1, uint32_T n2,
+extern void MultiWordSignedWrap_chg(const uint32_T u1[], int32_T n1, uint32_T n2,
   uint32_T y[]);
 extern void sMultiWordMul_chg(const uint32_T u1[], int32_T n1, const uint32_T u2[],
   int32_T n2, uint32_T y[], int32_T n);
